@@ -1,0 +1,128 @@
+
+openapi: 3.0.0
+info:
+  title: Sample API
+  version: 1.0.0
+  description: API for managing customers, agents, and orders
+
+servers:
+  - url: http://34.66.231.241:3000
+
+paths:
+  /customers:
+    get:
+      summary: Get all customers
+      responses:
+        '200':
+          description: A list of customers
+  /customers/{id}:
+    get:
+      summary: Get customer with agent and orders
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer details
+    patch:
+      summary: Partially update a customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Fields to update
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cust_name:
+                  type: string
+                phone_no:
+                  type: string
+                city:
+                  type: string
+      responses:
+        '200':
+          description: Customer updated
+  /orders:
+    get:
+      summary: Get all orders
+      responses:
+        '200':
+          description: A list of orders
+  /orders/{id}:
+    put:
+      summary: Fully update an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Order details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cust_code, agent_code, ord_amount, advance_amount, ord_date]
+              properties:
+                cust_code:
+                  type: string
+                agent_code:
+                  type: string
+                ord_amount:
+                  type: number
+                advance_amount:
+                  type: number
+                ord_date:
+                  type: string
+      responses:
+        '200':
+          description: Order updated
+    delete:
+      summary: Delete an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Order deleted
+  /agents:
+    post:
+      summary: Create a new agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [agent_code, agent_name, working_area]
+              properties:
+                agent_code:
+                  type: string
+                agent_name:
+                  type: string
+                working_area:
+                  type: string
+                commission:
+                  type: number
+                phone_no:
+                  type: string
+                country:
+                  type: string
+      responses:
+        '201':
+          description: Agent created
