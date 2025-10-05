@@ -203,6 +203,30 @@ app.delete('/orders/:id', async (req, res) => {
   }
 });
 
+const axios = require('axios');
+
+// SAY endpoint
+app.get('/say', async (req, res) => {
+  const keyword = req.query.keyword;
+  if (!keyword) {
+    return res.status(400).json({ error: 'Missing query parameter: keyword' });
+  }
+
+  try {
+    const cloudFunctionUrl = 'https://us-central1-itis-6177.cloudfunctions.net/sayFunction';
+
+    const response = await axios.get(cloudFunctionUrl, {
+      params: { keyword }
+    });
+
+    res.send(response.data);
+  } catch (err) {
+    console.error('Error calling cloud function:', err);
+    res.status(500).json({ error: 'Failed to call cloud function' });
+  }
+});
+
+
 // ---------------- START SERVER ----------------
 app.listen(port, '0.0.0.0', () => {
   console.log(`Server running at http://0.0.0.0:${port}`);
